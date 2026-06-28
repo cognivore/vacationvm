@@ -1,0 +1,19 @@
+[package]
+name = "hello-vvm"
+version = "0.1.0"
+edition = "2021"
+description = "A tiny standard-library-only vacationvm-style service (Unix-socket HTTP)."
+license = "AGPL-3.0-or-later"
+
+[[bin]]
+name = "hello-vvm"
+path = "src/main.rs"
+
+[dependencies]
+# Intentionally none — standard library only.
+
+[profile.release]
+opt-level = "z"
+lto = true
+strip = true
+panic = "abort"

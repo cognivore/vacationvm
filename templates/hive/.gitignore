@@ -1,0 +1,4 @@
+/result
+/result-*
+.direnv
+# NEVER ignore *.age — encrypted secrets are meant to be committed.
