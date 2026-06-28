@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vacationvm-dns"
+version = "0.1.0"
+description = "Stateless declarative Porkbun DNS reconciler for vacationvm"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "AGPL-3.0-or-later" }
+# Intentionally ZERO runtime dependencies — standard library only, so the tool
+# is trivially auditable and builds without a lockfile.
+dependencies = []
+
+[project.scripts]
+vacationvm-dns = "vacationvm_dns.cli:main"
+
+[tool.setuptools]
+packages = ["vacationvm_dns"]
