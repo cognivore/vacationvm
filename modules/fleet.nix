@@ -481,8 +481,18 @@ in
 
       users.groups = listToAttrs (map (a: nameValuePair a.group { }) enabledList);
 
-      # ── App units ─────────────────────────────────────────────────────────
-      systemd.services = listToAttrs (map mkAppService enabledList);
+      # ── App units (+ a Caddy restart trigger) ─────────────────────────────
+      # The Caddy restartTrigger on the unix-app group set is load-bearing: a
+      # process's supplementary groups are fixed at start, so adding Caddy to a
+      # new app's group (when the app set changes) does NOT take effect on the
+      # running Caddy — it keeps getting `connect: permission denied` on the new
+      # app's socket (HTTP 502) until restarted. Triggering on the group set
+      # makes activation restart Caddy exactly when needed.
+      systemd.services =
+        listToAttrs (map mkAppService enabledList)
+        // optionalAttrs cfg.caddy.enable {
+          caddy.restartTriggers = [ (builtins.toString caddyExtraGroups) ];
+        };
 
       # ── Caddy ─────────────────────────────────────────────────────────────
       services.caddy = mkIf cfg.caddy.enable {
